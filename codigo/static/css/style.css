@@ -5,13 +5,13 @@ body {
 }
 
 nav {
-    background-color: #007BFF;
-    color: white;
+    background-color: #f7ff87;
     padding: 10px;
+    text-align: center;
 }
 
 nav a {
-    color: white;
+    color: black;
     margin: 0 15px;
     text-decoration: none;
 }
@@ -40,12 +40,12 @@ form input {
 
 form button {
     padding: 10px 15px;
-    background-color: #007BFF;
-    color: white;
+    background-color: #f7ff87;
+    color: black;
     border: none;
     cursor: pointer;
 }
 
 form button:hover {
-    background-color: #0056b3;
+    background-color: #eeff02;
 }

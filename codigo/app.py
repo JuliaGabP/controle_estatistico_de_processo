@@ -19,43 +19,56 @@ def index():
 @app.route("/graficox", methods=["GET", "POST"])
 def graficox():
     if request.method == "POST":
-        # Obter os dados do formulário
-        num_amostras = int(request.form["num_amostras"])
-        tamanho_amostra = int(request.form["tamanho_amostra"])
-        
-        # Recolher os dados fornecidos pelo usuário
-        amostras = []
-        for i in range(num_amostras):
-            valores = request.form[f"amostra_{i+1}"].split(",")
-            valores = [float(v) for v in valores]
-            amostras.append(valores)
-        
-        # Calcular médias das amostras
-        medias = [np.mean(amostra) for amostra in amostras]
-        media_geral = np.mean(medias)
-        limite_superior = media_geral + 1.5
-        limite_inferior = media_geral - 1.5
+        # Etapa 1: Receber número de amostras e tamanho da amostra
+        if "num_amostras" in request.form and "tamanho_amostra" in request.form and "amostra_1" not in request.form:
+            num_amostras = int(request.form["num_amostras"])
+            tamanho_amostra = int(request.form["tamanho_amostra"])
 
-        # Gerar gráfico
-        plt.figure()
-        plt.plot(medias, marker="o", label="Média das Amostras")
-        plt.axhline(y=media_geral, color="green", linestyle="--", label="Média Geral")
-        plt.axhline(y=limite_superior, color="red", linestyle="--", label="Limite Superior")
-        plt.axhline(y=limite_inferior, color="red", linestyle="--", label="Limite Inferior")
-        plt.title("Gráfico X")
-        plt.xlabel("Amostra")
-        plt.ylabel("Média")
-        plt.legend()
-        plt.grid()
+            # Preparar a página para inserir os valores das amostras
+            dados = {"num_amostras": num_amostras, "tamanho_amostra": tamanho_amostra}
+            return render_template("graficox.html", dados=dados, grafico_path=None)
 
-        # Salvar gráfico
-        filepath = os.path.join(GRAPH_DIR, "grafico_x.png")
-        plt.savefig(filepath)
-        plt.close()
+        # Etapa 2: Receber os valores das amostras
+        elif "amostra_1" in request.form:
+            num_amostras = int(request.form["num_amostras"])
+            tamanho_amostra = int(request.form["tamanho_amostra"])
 
-        return render_template("graficox.html", grafico_path=filepath, dados=amostras)
+            # Recolher os dados fornecidos pelo usuário
+            amostras = []
+            for i in range(num_amostras):
+                valores = request.form[f"amostra_{i+1}"].split(",")
+                valores = [float(v) for v in valores]
+                amostras.append(valores)
 
+            # Calcular médias das amostras
+            medias = [np.mean(amostra) for amostra in amostras]
+            media_global = np.mean(medias)
+            desvio_padrao = np.std(medias)
+            limite_superior = media_global + (2 * desvio_padrao)
+            limite_inferior = media_global - (2 * desvio_padrao)
+
+            # Gerar gráfico
+            plt.figure()
+            plt.plot(medias, marker="o", label="Médias das Amostras")
+            plt.axhline(y=media_global, color="green", linestyle="--", label="Média Global")
+            plt.axhline(y=limite_superior, color="red", linestyle="--", label="Limite Superior")
+            plt.axhline(y=limite_inferior, color="red", linestyle="--", label="Limite Inferior")
+            plt.title("Gráfico X")
+            plt.xlabel("Amostra")
+            plt.ylabel("Média")
+            plt.legend()
+            plt.grid()
+
+            # Salvar gráfico
+            filepath = os.path.join(GRAPH_DIR, "grafico_x.png")
+            plt.savefig(filepath)
+            plt.close()
+
+            return render_template("graficox.html", grafico_path=filepath, dados=None)
+
+    # Primeira vez acessando a página
     return render_template("graficox.html", grafico_path=None, dados=None)
+
 
 # Rota para o gráfico R
 @app.route("/graficor", methods=["GET", "POST"])
