@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Gráfico R</h1>
+
+{% if not dados %}
+<!-- Etapa 1: Solicitação do número de amostras e tamanho da amostra -->
+<form method="POST">
+    <label for="num_amostras">Número de Amostras:</label>
+    <input type="number" name="num_amostras" id="num_amostras" required>
+    <label for="tamanho_amostra">Tamanho da Amostra:</label>
+    <input type="number" name="tamanho_amostra" id="tamanho_amostra" required>
+    <button type="submit">Próximo</button>
+</form>
+{% else %}
+<!-- Etapa 2: Solicitação dos valores das amostras -->
+<form method="POST">
+    <input type="hidden" name="num_amostras" value="{{ dados.num_amostras }}">
+    <input type="hidden" name="tamanho_amostra" value="{{ dados.tamanho_amostra }}">
+    {% for i in range(dados.num_amostras) %}
+        <label for="amostra_{{ i+1 }}">Valores da Amostra {{ i+1 }} (separados por vírgula):</label>
+        <input type="text" name="amostra_{{ i+1 }}" required>
+    {% endfor %}
+    <button type="submit">Gerar Gráfico R</button>
+</form>
+{% endif %}
+
+{% if grafico_path %}
+<img src="{{ grafico_path }}" alt="Gráfico R">
+{% endif %}
+{% endblock %}

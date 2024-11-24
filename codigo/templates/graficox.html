@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Gráfico X</h1>
+
+{% if not dados %}
+<form method="POST">
+    <label for="num_amostras">Número de Amostras:</label>
+    <input type="number" name="num_amostras" id="num_amostras" required>
+    <label for="tamanho_amostra">Tamanho da Amostra:</label>
+    <input type="number" name="tamanho_amostra" id="tamanho_amostra" required>
+    <button type="submit">Próximo</button>
+</form>
+{% else %}
+<form method="POST">
+    <input type="hidden" name="num_amostras" value="{{ dados|length }}">
+    <input type="hidden" name="tamanho_amostra" value="{{ dados[0]|length }}">
+    {% for i in range(dados|length) %}
+        <label for="amostra_{{ i+1 }}">Valores da Amostra {{ i+1 }} (separados por vírgula):</label>
+        <input type="text" name="amostra_{{ i+1 }}" required>
+    {% endfor %}
+    <button type="submit">Gerar Gráfico X</button>
+</form>
+{% endif %}
+
+{% if grafico_path %}
+<img src="{{ grafico_path }}" alt="Gráfico X">
+{% endif %}
+{% endblock %}
