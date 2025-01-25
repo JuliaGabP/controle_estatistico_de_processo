@@ -1,31 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Gráfico X</h1>
+<h1>Gráfico X̄</h1>
 
 {% if not dados %}
-<!-- Etapa 1: Solicitação do número de amostras e tamanho da amostra -->
+<!-- Etapa 1: Solicitação do número de amostras e valor de A2 -->
 <form method="POST">
     <label for="num_amostras">Número de Amostras:</label>
     <input type="number" name="num_amostras" id="num_amostras" required>
-    <label for="tamanho_amostra">Tamanho da Amostra:</label>
-    <input type="number" name="tamanho_amostra" id="tamanho_amostra" required>
+    <label for="A2">Fator A2:</label>
+    <input type="text" name="A2" id="A2" required>
     <button type="submit">Próximo</button>
 </form>
 {% else %}
-<!-- Etapa 2: Solicitação dos valores das amostras -->
+<!-- Etapa 2: Solicitação dos valores de X̄ e R -->
 <form method="POST">
     <input type="hidden" name="num_amostras" value="{{ dados.num_amostras }}">
-    <input type="hidden" name="tamanho_amostra" value="{{ dados.tamanho_amostra }}">
+    <input type="hidden" name="A2" value="{{ dados.A2 }}">
     {% for i in range(dados.num_amostras) %}
-        <label for="amostra_{{ i+1 }}">Valores da Amostra {{ i+1 }} (separados por vírgula):</label>
-        <input type="text" name="amostra_{{ i+1 }}" required>
+        <label for="x_{{ i+1 }}">Média da Amostra {{ i+1 }} (X̄):</label>
+        <input type="text" name="x_{{ i+1 }}" id="x_{{ i+1 }}" required>
+        <label for="r_{{ i+1 }}">Amplitude da Amostra {{ i+1 }} (R):</label>
+        <input type="text" name="r_{{ i+1 }}" id="r_{{ i+1 }}" required>
+        <br>
     {% endfor %}
-    <button type="submit">Gerar Gráfico X</button>
+    <button type="submit">Gerar Gráfico X̄</button>
 </form>
 {% endif %}
 
 {% if grafico_path %}
-<img src="{{ grafico_path }}" alt="Gráfico X">
+<h2>Gráfico Gerado:</h2>
+<img src="{{ grafico_path }}" alt="Gráfico X̄">
+{% if fora_limites %}
+    <h3>Itens fora dos limites:</h3>
+    <ul>
+        {% for item in fora_limites %}
+            <li>Amostra {{ item }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
 {% endif %}
 {% endblock %}
