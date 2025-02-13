@@ -30,6 +30,9 @@ def enviar_alerta_telegram(mensagem):
             print(f"Erro ao enviar alerta: {response.text}")
     except Exception as e:
         print(f"Erro de conexão: {e}")
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route("/graficox", methods=["GET", "POST"])
 def graficox():
