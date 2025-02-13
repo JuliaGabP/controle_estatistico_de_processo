@@ -4,7 +4,6 @@
 <h1>Gráfico X̄</h1>
 
 {% if not dados %}
-<!-- Etapa 1: Solicitação do número de amostras e valor de A2 -->
 <form method="POST">
     <label for="num_amostras">Número de Amostras:</label>
     <input type="number" name="num_amostras" id="num_amostras" required>
@@ -13,7 +12,6 @@
     <button type="submit">Próximo</button>
 </form>
 {% else %}
-<!-- Etapa 2: Solicitação dos valores de X̄ e R -->
 <form method="POST">
     <input type="hidden" name="num_amostras" value="{{ dados.num_amostras }}">
     <input type="hidden" name="A2" value="{{ dados.A2 }}">
